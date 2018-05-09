@@ -3,20 +3,21 @@ package com.evolve.gropiedemo
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.xwray.groupie.ExpandableGroup
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
 
 /**
  * Created by krishna on 5/8/18.
  */
 class MainFragment : Fragment() {
+
 
     lateinit var groupieAdapter: GroupAdapter<ViewHolder>
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,17 +52,17 @@ class MainFragment : Fragment() {
                 val expandableGroup = ExpandableGroup(parent)
                 channel.categoryList.forEach { category ->
                     expandableGroup.apply {
-                        val item = CategoryItem(category, parent)
+                        val item = CategoryItem(index, category, parent)
                         parent.selectedList.add(item)
-                        add(item)
+                        add(Section(item))
                     }
                 }
                 add(expandableGroup)
             }
         }
 
-    }
 
+    }
 
 
 
@@ -74,10 +75,10 @@ class MainFragment : Fragment() {
     }
 
 
-    private fun getDummyCategory(index: Int): List<String> {
-        val list = mutableListOf<String>()
+    private fun getDummyCategory(index: Int): List<Category> {
+        val list = mutableListOf<Category>()
         for (i in 1..5) {
-            list.add("Category $index$i")
+            list.add(Category("Category $index$i",false))
         }
 
         return list

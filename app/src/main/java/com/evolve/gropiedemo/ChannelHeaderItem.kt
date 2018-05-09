@@ -1,25 +1,20 @@
 package com.evolve.gropiedemo
 
-import android.support.v7.widget.SwitchCompat
-import android.widget.CheckBox
-import android.widget.TextView
+
 import android.widget.Toast
+import com.evolve.gropiedemo.databinding.ChannelHeaderBinding
 import com.xwray.groupie.ExpandableGroup
 import com.xwray.groupie.ExpandableItem
-import com.xwray.groupie.Item
-import com.xwray.groupie.ViewHolder
-
-
-import kotlinx.android.synthetic.main.channel_header.*
+import com.xwray.groupie.databinding.BindableItem
 
 /**
  * Created by krishna on 5/8/18.
  */
-class ChannelHeaderItem(val position: Int, val headerItem: Channel) : Item<com.xwray.groupie.ViewHolder>(),
+class ChannelHeaderItem(val position: Int, val headerItem: Channel) : BindableItem<ChannelHeaderBinding>(),
         ExpandableItem {
 
     private var expandableGroup: ExpandableGroup? = null
-    lateinit var binding: ViewHolder
+    lateinit var binding: ChannelHeaderBinding
 
 
     var selectedList: ArrayList<CategoryItem> = arrayListOf()
@@ -29,14 +24,17 @@ class ChannelHeaderItem(val position: Int, val headerItem: Channel) : Item<com.x
         return R.layout.channel_header
     }
 
-    override fun bind(viewBinding: ViewHolder, position: Int) {
+    override fun bind(viewBinding: ChannelHeaderBinding, position: Int) {
         this.binding = viewBinding
-        binding.itemView.findViewById<TextView>(R.id.channel_name).text = headerItem.title
-
-        binding.itemView.findViewById<TextView>(R.id.channel_toggle).text = " Count : 0"
-
-
-        binding.itemView.setOnClickListener {
+        binding.channelName.text = headerItem.title
+        var count = 0
+        headerItem.categoryList.forEach {
+            if (it.isSelected) {
+                count++
+            }
+        }
+        binding.channelToggle.text = " Count : $count"
+        binding.root.setOnClickListener {
             expandableGroup?.onToggleExpanded()
         }
 
@@ -48,24 +46,21 @@ class ChannelHeaderItem(val position: Int, val headerItem: Channel) : Item<com.x
         this.expandableGroup = onToggleListener
     }
 
-    fun evaluateSelection(hashCode: String, checked: Boolean) {
+    fun evaluateSelection(parentPosition: Int, category: Category, checked: Boolean) {
         var count = 0
-        selectedList.forEach { toggleSelection ->
-            if (toggleSelection.getCategoryId() == hashCode) {
-                toggleSelection.setSelected(checked)
-            }
-            if(toggleSelection.isCategorySelected()){
+        headerItem.categoryList.forEachIndexed { index, mCategory ->
+            if (category.catName == mCategory.catName)
+                headerItem.categoryList[index].isSelected = checked
+            if (headerItem.categoryList[index].isSelected) {
                 count++
             }
         }
-
-        binding.itemView.findViewById<TextView>(R.id.channel_toggle).text = " Count : $count"
-        Toast.makeText(binding.itemView.context,"Evaluation $count",Toast.LENGTH_SHORT).show()
+        binding.channelToggle.text = " Count : $count"
+        Toast.makeText(binding.root.context, "Evaluation ${headerItem.title} --> $count", Toast.LENGTH_SHORT).show()
+        // notifyChanged()
 
 
     }
-
-
 
 
 }

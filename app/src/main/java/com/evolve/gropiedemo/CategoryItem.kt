@@ -2,29 +2,39 @@ package com.evolve.gropiedemo
 
 import android.widget.CheckBox
 import android.widget.TextView
+import com.evolve.gropiedemo.databinding.CategoryBinding
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
+import com.xwray.groupie.databinding.BindableItem
 import kotlinx.android.synthetic.main.category.*
 
 
-class CategoryItem(var child: String, var parent: ChannelHeaderItem) : Item<ViewHolder>(), ToggleSelection {
+class CategoryItem(var parentPostion:Int,var child: Category,  parent: ChannelHeaderItem) : BindableItem<CategoryBinding>(), ToggleSelection {
     private var isSelected: Boolean = false
    // var binding: CategoryBinding? = null
-    var viewHolder:ViewHolder?=null
+    var viewHolder:CategoryBinding?=null
+    var parent:ChannelHeaderItem
+    var headerMap= mapOf<Int,ChannelHeaderItem>()
+
+    init {
+        this.parent=parent
+    }
 
     override fun getLayout(): Int {
         return R.layout.category
+
     }
 
 
-    override fun bind(viewBinding: ViewHolder, position: Int) {
+    override fun bind(viewBinding: CategoryBinding, position: Int) {
         // this.binding = viewBinding
         this.viewHolder=viewBinding
-        viewBinding.itemView.findViewById<TextView>(R.id.txtCategoryName).text = child
-        viewBinding.itemView.findViewById<CheckBox>(R.id.action_select_category).isChecked = isSelected
-        viewBinding.itemView.findViewById<CheckBox>(R.id.action_select_category).setOnCheckedChangeListener { buttonView, isChecked ->
+        viewBinding.txtCategoryName.text = child.catName
+        viewBinding.actionSelectCategory.setOnCheckedChangeListener(null)
+        viewBinding.actionSelectCategory.isChecked = isSelected
+        viewBinding.actionSelectCategory.setOnCheckedChangeListener { buttonView, isChecked ->
             isSelected = isChecked
-            parent.evaluateSelection(child, isChecked)
+            parent.evaluateSelection(position,child, isChecked)
         }
     }
 
@@ -32,11 +42,11 @@ class CategoryItem(var child: String, var parent: ChannelHeaderItem) : Item<View
     override fun onToggleChange(isSelected: Boolean) {
         // update isSelected state for on parent toggle changed
         this.isSelected = isSelected
-        viewHolder?.itemView?.findViewById<CheckBox>(R.id.action_select_category)?.isChecked = isSelected
+        viewHolder?.actionSelectCategory?.isChecked = isSelected
     }
 
     override fun getCategoryId(): String {
-        return child
+        return child.catName
     }
 
     override fun isCategorySelected(): Boolean {

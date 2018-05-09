@@ -5,5 +5,5 @@ package com.evolve.gropiedemo
  */
 data class Channel(
         var title: String,
-        var categoryList: List<String>
+        var categoryList: List<Category >
 )
