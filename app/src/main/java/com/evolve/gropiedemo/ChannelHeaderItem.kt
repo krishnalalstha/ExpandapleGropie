@@ -36,6 +36,7 @@ class ChannelHeaderItem(val position: Int, val headerItem: Channel) : BindableIt
         binding.channelToggle.text = " Count : $count"
         binding.root.setOnClickListener {
             expandableGroup?.onToggleExpanded()
+            throw CustomException("Test error")
         }
 
 
@@ -57,7 +58,7 @@ class ChannelHeaderItem(val position: Int, val headerItem: Channel) : BindableIt
         }
         binding.channelToggle.text = " Count : $count"
         Toast.makeText(binding.root.context, "Evaluation ${headerItem.title} --> $count", Toast.LENGTH_SHORT).show()
-        // notifyChanged()
+         //notifyChanged()
 
 
     }

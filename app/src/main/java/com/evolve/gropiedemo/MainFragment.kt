@@ -35,10 +35,15 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         rvList.apply {
             layoutManager = LinearLayoutManager(this@MainFragment.activity)
             adapter = buildAdapter(getDummyData())
         }
+
+
+
+
 
 
     }
